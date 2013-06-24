@@ -30,6 +30,7 @@ Dir[File.expand_path('../lib/**/*.rb', File.dirname(__FILE__))].each { |f| requi
 
 RSpec.configure do |config|
   config.filter_run wip: true
+  config.run_all_when_everything_filtered = true
   config.mock_with :rspec
 
   # http://adventuresincoding.com/2012/05/how-to-configure-cucumber-and-rspec-to-work-with-mongoid-30
