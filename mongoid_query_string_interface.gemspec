@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("mongoid", ["~> 3.1.0"])
 
   s.add_development_dependency(%q<rspec>, [">= 2.3.0"])
-  s.add_development_dependency(%q<database_cleaner>, [">= 0.5.0"])
 
   s.files = Dir.glob("lib/**/*") + %w(MIT_LICENSE README.md Gemfile Gemfile.lock)
   s.require_path = 'lib'
