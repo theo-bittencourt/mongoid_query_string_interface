@@ -20,7 +20,6 @@ GEM
     builder (3.0.4)
     coderay (1.0.9)
     columnize (0.3.6)
-    database_cleaner (0.6.7)
     diff-lcs (1.1.2)
     i18n (0.6.1)
     linecache (0.46)
@@ -68,7 +67,6 @@ PLATFORMS
 DEPENDENCIES
   bson
   bson_ext
-  database_cleaner (>= 0.5.0)
   mongoid_query_string_interface!
   pry
   rake (= 0.8.7)
