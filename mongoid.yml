@@ -1,0 +1,8 @@
+test:
+  sessions:
+    default:
+      database: query_string_interface
+      hosts:
+        - localhost:27017
+  options:
+    allow_dynamic_fields: true
