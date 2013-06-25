@@ -18,7 +18,7 @@ class Document
   end
 
   def self.default_sorting_options
-    [:created_at.desc, :updated_at.asc]
+    ['created_at.desc', 'updated_at.asc']
   end
 
   def self.filtering_attributes_to_replace
@@ -210,7 +210,11 @@ describe Mongoid::QueryStringInterface do
       before { another_document }
 
       it 'should use accept an list of fields to order, separated by "|", using ascending order as default' do
-        Document.filter_by('order_by' => 'created_at|title').should == [document, another_document, other_document]
+        document.update_attributes         title: 'AAA', created_at: Time.now - 5.days
+        other_document.update_attributes   title: 'AAA', created_at: Time.now - 3.days
+        another_document.update_attributes title: 'BBB', created_at: Time.now
+        
+        Document.filter_by('order_by' => 'title|created_at').should == [document, other_document, another_document]
       end
 
       it 'should use accept an list of fields to order, separated by "|", mixing default and given direction' do
@@ -218,9 +222,28 @@ describe Mongoid::QueryStringInterface do
       end
 
       it 'should use accept an list of fields to order, separated by "|", using given direction for each' do
-        Document.filter_by('order_by' => 'created_at.desc|title.desc').should == [other_document, another_document, document]
+        document.update_attributes         title: 'AAA', created_at: Time.now - 5.days
+        other_document.update_attributes   title: 'AAA', created_at: Time.now - 3.days
+        another_document.update_attributes title: 'BBB', created_at: Time.now
+        Document.filter_by('order_by' => 'title.desc|created_at.desc').should == [another_document, other_document, document]
       end
     end
+  end
+
+  context 'when #filter_with_pagination_by receive a block' do
+    before do
+      Document.delete_all
+
+      @b_document = Document.create title: 'B Title', status: 'published'
+      @c_document = Document.create title: 'C Title', status: 'published'
+      @a_document = Document.create title: 'A Title', status: 'published'
+
+      @result = Document.filter_with_pagination_by({}) do |collection|
+        collection.order_by(:title.asc)
+      end
+    end
+
+    it { @result[:documents].should eq [@a_document, @b_document, @c_document] }
   end
 
   context 'with filtering' do

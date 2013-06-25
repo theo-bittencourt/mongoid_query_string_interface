@@ -12,13 +12,13 @@ module Mongoid
 
     PAGER_ATTRIBUTES = [:total_entries, :total_pages, :per_page, :offset, :previous_page, :current_page, :next_page]
 
-    def filter_by(params={})
+    def filter_by(params={}, &block)
       params = hash_with_indifferent_access(params)
-      filter_only_and_order_by(params).paginate(pagination_options(params))
+      filter_only_and_order_by(params, &block).paginate(pagination_options(params))
     end
 
-    def filter_with_pagination_by(params)
-      build_results_with_pager_for(filter_by(params))
+    def filter_with_pagination_by(params, &block)
+      build_results_with_pager_for(filter_by(params, &block))
     end
 
     def filter_with_optimized_pagination_by(params={})
@@ -30,9 +30,13 @@ module Mongoid
       filter_only_and_order_by(params).skip(skip).limit(per_page)
     end
 
-    def filter_only_and_order_by(params={})
+    def filter_only_and_order_by(params={}, &block)
       params = hash_with_indifferent_access(params)
-      filter_only_by(params).order_by(*sorting_options(params))
+      if block_given?
+        yield(filter_only_by(params))
+      else
+        filter_only_by(params).order_by(*sorting_options(params))
+      end
     end
 
     def filter_only_by(params={})
